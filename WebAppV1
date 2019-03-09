@@ -1,0 +1,40 @@
+from flask import Flask, render_template, request, url_for, redirect
+from MainProject2018 import MainProject2018
+
+app = Flask(__name__)
+
+searchterm =""
+noofterms = 0
+
+@app.route("/", methods=["GET", "POST"])
+def homepage():
+    error = None
+    #return render_template("FirstPage.html", user=user)
+    if request.method == 'POST':
+        searchterm = request.form['keyword']
+        print(searchterm)
+        noofterms = request.form['number']
+        print(noofterms)
+        status = MainProject2018.runfunc(searchterm, noofterms)
+        print("loading page: " + str(status))
+        while (status != 1):
+            print("hello")
+
+        return redirect(url_for("LoadingPage"))
+
+
+    return render_template("FirstPage.html", error=error)
+
+@app.route("/")
+@app.route("/SecondPage/")
+def SecondPage():
+    return render_template("SecondPage.html")
+
+@app.route("/")
+@app.route("/LoadingPage/")
+def LoadingPage():
+    return render_template("LoadingPage.html")
+
+
+if __name__== "__main__":
+    app.run()
